@@ -85,7 +85,7 @@ def cancer_logistic_pipeline():
     f1 = f1_score(y_test, y_test_pred)
     conf_matrix = confusion_matrix(y_test, y_test_pred)
 
-    return train_acc, test_acc, precision, recall, f1, conf_matrix
+    return train_acc, test_acc, precision, recall, f1
 
 
 # -------------------------
