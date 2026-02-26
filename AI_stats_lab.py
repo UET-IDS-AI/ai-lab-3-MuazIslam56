@@ -1,173 +1,30 @@
-"""
-Linear & Logistic Regression Lab
+import Lab3 as A  
 
-Follow the instructions in each function carefully.
-DO NOT change function names.
-Use random_state=42 everywhere required.
-"""
+def test_diabetes_pipeline():
+    train_mse, test_mse, train_r2, test_r2, top3 = A.diabetes_linear_pipeline()
+    assert train_mse > 0, "Train MSE should be positive"
+    assert -1 <= test_r2 <= 1, "Test R2 should be in [-1, 1]"
+    assert len(top3) == 3, "Top 3 features should have length 3"
 
-import numpy as np
+def test_diabetes_cv():
+    mean_r2, std_r2 = A.diabetes_cross_validation()
+    assert -1 <= mean_r2 <= 1, "Mean R2 should be in [-1, 1]"
+    assert std_r2 >= 0, "Std of R2 should be non-negative"
 
-from sklearn.datasets import load_diabetes, load_breast_cancer
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import (
-    mean_squared_error,
-    r2_score,
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    confusion_matrix
-)
+def test_cancer_pipeline():
+    train_acc, test_acc, precision, recall, f1, conf_matrix = A.cancer_logistic_pipeline()
+    assert 0 <= train_acc <= 1, "Train accuracy should be between 0 and 1"
+    assert 0 <= test_acc <= 1, "Test accuracy should be between 0 and 1"
+    assert 0 <= precision <= 1, "Precision should be between 0 and 1"
+    assert 0 <= recall <= 1, "Recall should be between 0 and 1"
+    assert 0 <= f1 <= 1, "F1-score should be between 0 and 1"
+    assert conf_matrix.shape == (2,2), "Confusion matrix must be 2x2 for binary classification"
 
+def test_logistic_regularization():
+    results = A.cancer_logistic_regularization()
+    assert len(results) == 5, "There should be 5 C values in results"
 
-# =========================================================
-# QUESTION 1 – Linear Regression Pipeline (Diabetes)
-# =========================================================
-
-def diabetes_linear_pipeline():
-    """
-    STEP 1: Load diabetes dataset.
-    STEP 2: Split into train and test (80-20).
-            Use random_state=42.
-    STEP 3: Standardize features using StandardScaler.
-            IMPORTANT:
-            - Fit scaler only on X_train
-            - Transform both X_train and X_test
-    STEP 4: Train LinearRegression model.
-    STEP 5: Compute:
-            - train_mse
-            - test_mse
-            - train_r2
-            - test_r2
-    STEP 6: Identify indices of top 3 features
-            with largest absolute coefficients.
-
-    RETURN:
-        train_mse,
-        test_mse,
-        train_r2,
-        test_r2,
-        top_3_feature_indices (list length 3)
-    """
-
-    raise NotImplementedError
-
-
-# =========================================================
-# QUESTION 2 – Cross-Validation (Linear Regression)
-# =========================================================
-
-def diabetes_cross_validation():
-    """
-    STEP 1: Load diabetes dataset.
-    STEP 2: Standardize entire dataset (after splitting is NOT needed for CV,
-            but use pipeline logic manually).
-    STEP 3: Perform 5-fold cross-validation
-            using LinearRegression.
-            Use scoring='r2'.
-
-    STEP 4: Compute:
-            - mean_r2
-            - std_r2
-
-    RETURN:
-        mean_r2,
-        std_r2
-    """
-
-    raise NotImplementedError
-
-
-# =========================================================
-# QUESTION 3 – Logistic Regression Pipeline (Cancer)
-# =========================================================
-
-def cancer_logistic_pipeline():
-    """
-    STEP 1: Load breast cancer dataset.
-    STEP 2: Split into train-test (80-20).
-            Use random_state=42.
-    STEP 3: Standardize features.
-    STEP 4: Train LogisticRegression(max_iter=5000).
-    STEP 5: Compute:
-            - train_accuracy
-            - test_accuracy
-            - precision
-            - recall
-            - f1
-            - confusion matrix (optional to compute but not return)
-
-    In comments:
-        Explain what a False Negative represents medically.
-
-    RETURN:
-        train_accuracy,
-        test_accuracy,
-        precision,
-        recall,
-        f1
-    """
-
-    raise NotImplementedError
-
-
-# =========================================================
-# QUESTION 4 – Logistic Regularization Path
-# =========================================================
-
-def cancer_logistic_regularization():
-    """
-    STEP 1: Load breast cancer dataset.
-    STEP 2: Split into train-test (80-20).
-    STEP 3: Standardize features.
-    STEP 4: For C in [0.01, 0.1, 1, 10, 100]:
-            - Train LogisticRegression(max_iter=5000, C=value)
-            - Compute train accuracy
-            - Compute test accuracy
-
-    STEP 5: Store results in dictionary:
-            {
-                C_value: (train_accuracy, test_accuracy)
-            }
-
-    In comments:
-        - What happens when C is very small?
-        - What happens when C is very large?
-        - Which case causes overfitting?
-
-    RETURN:
-        results_dictionary
-    """
-
-    raise NotImplementedError
-
-
-# =========================================================
-# QUESTION 5 – Cross-Validation (Logistic Regression)
-# =========================================================
-
-def cancer_cross_validation():
-    """
-    STEP 1: Load breast cancer dataset.
-    STEP 2: Standardize entire dataset.
-    STEP 3: Perform 5-fold cross-validation
-            using LogisticRegression(C=1, max_iter=5000).
-            Use scoring='accuracy'.
-
-    STEP 4: Compute:
-            - mean_accuracy
-            - std_accuracy
-
-    In comments:
-        Explain why cross-validation is especially
-        important in medical diagnosis problems.
-
-    RETURN:
-        mean_accuracy,
-        std_accuracy
-    """
-
-    raise NotImplementedError
+def test_logistic_cv():
+    mean_acc, std_acc = A.cancer_cross_validation()
+    assert 0 <= mean_acc <= 1, "Mean accuracy should be between 0 and 1"
+    assert std_acc >= 0, "Std accuracy should be non-negative"
